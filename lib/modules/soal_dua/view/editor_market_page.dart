@@ -169,6 +169,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
               listener: (context, state) {
                 if (state is AddMarketSuccessState) {
                   showCustomSuccess(context, "Berhasil disimpan");
+                  Navigator.of(context).pop();
                 } else if (state is AddMarketFailedState) {
                   showCustomFailed(context, "Gagal disimpan");
                 }
@@ -178,6 +179,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
               listener: (context, state) {
                 if (state is EditMarketSuccessState) {
                   showCustomSuccess(context, "Berhasil diupdate");
+                  Navigator.of(context).pop();
                 } else if (state is EditMarketFailedState) {
                   showCustomFailed(context, "Gagal diupdate");
                 }
@@ -187,6 +189,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
               listener: (context, state) {
                 if (state is DeleteMarketSuccessState) {
                   showCustomSuccess(context, "Berhasil dihapus");
+                  Navigator.of(context).pop();
                 } else if (state is DeleteMarketFailedState) {
                   showCustomFailed(context, "Gagal dihapus");
                 }
@@ -301,6 +304,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                   Expanded(
                                     child: TextbuttonCustom(color: 0xffD60004, text: "Delete", onPress: (){
                                       showDialog(
+                                        useRootNavigator: false,
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(

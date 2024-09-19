@@ -109,11 +109,11 @@ class DetailPageState extends State<DetailPage> {
                       Text(data!.areaName, style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black.withOpacity(0.5))),
                     ],
                   ),
+                  const SizedBox(height: 5),
+                  Text("${data!.latitude} : ${data!.longtitude}", style: const TextStyle(fontWeight: FontWeight.normal)),
                   const SizedBox(height: 10),
                   const Divider(),
                   Text(data!.outletAddress, style: const TextStyle(fontWeight: FontWeight.normal)),
-                  const SizedBox(height: 5),
-                  Text("${data!.latitude} : ${data!.longtitude}", style: const TextStyle(fontWeight: FontWeight.normal)),
                 ],
               ),
             )

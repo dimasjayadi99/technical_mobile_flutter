@@ -58,7 +58,15 @@ class SoalDuaState extends State<SoalDua>{
                     return const Center(child: CircularProgressIndicator());
                   }
                   else if(state is ListMarketEmptyState){
-                    return const Center(child: Text("Tidak ada data"));
+                    return Center(child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_rounded, color: Colors.black.withOpacity(0.5),),
+                        const SizedBox(height: 5),
+                        const Text("Tidak ada data"),
+                      ],
+                    ));
                   }else if(state is ListMarketSuccessState){
                     listData = state.listData;
                     return ListView.separated(

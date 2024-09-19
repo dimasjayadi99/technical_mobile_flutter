@@ -36,7 +36,7 @@ class BottomNavState extends State<BottomNav> {
         bottomNavigationBar: BottomNavigationBar(
           enableFeedback: false,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.dashboard, size: 30), label: 'Soal 1'),
+            BottomNavigationBarItem(icon: Icon(Icons.store, size: 30), label: 'Soal 1'),
             BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, size: 30), label: 'Soal 2'),
           ],
           selectedItemColor: Colors.redAccent,
