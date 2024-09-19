@@ -10,6 +10,7 @@ import 'package:savoria_test/modules/soal_dua/viewmodel/add_market_bloc.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/delete_market_bloc.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/detail_market_bloc.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/edit_market_bloc.dart';
+import 'package:savoria_test/utils/textfield_custom.dart';
 import '../../../utils/snackbar_custom.dart';
 
 class EditorMarketPage extends StatefulWidget {
@@ -235,39 +236,20 @@ class EditorMarketPageState extends State<EditorMarketPage> {
 
                             const SizedBox(height: 20),
 
-                            TextFormField(
-                              controller: marketNameController,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                hoverColor: Colors.blue,
-                                focusColor: Colors.blue,
-                                fillColor: Colors.transparent,
+                            TextfieldCustom(
+                                controller: marketNameController,
                                 hintText: "Name Market",
-                                labelText: "Name Market",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              // validator: widget.validator,
+                                maxLine: 1,
+                                textInputAction: TextInputAction.next
                             ),
 
                             const SizedBox(height: 10),
 
-                            TextFormField(
-                              controller: marketAddressController,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 4,
-                              decoration: InputDecoration(
-                                hoverColor: Colors.blue,
-                                focusColor: Colors.blue,
-                                fillColor: Colors.transparent,
+                            TextfieldCustom(
+                                controller: marketAddressController,
                                 hintText: "Market Address",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              // validator: widget.validator,
+                                maxLine: 4,
+                                textInputAction: TextInputAction.newline
                             ),
 
                             const SizedBox(height: 20),
