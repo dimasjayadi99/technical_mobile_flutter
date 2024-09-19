@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savoria_test/api/api_service.dart';
+import 'package:savoria_test/widget/shimmer_widget.dart';
 import '../../../widget/card_outlet.dart';
 import '../model/list_outlet.dart';
 import 'detail_page.dart';
@@ -53,7 +54,7 @@ class SoalSatuState extends State<SoalSatu> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? ShimmerWidget()
               : listData == []
               ? const Center(child: Text('Tidak ada data'))
               :  ListView.separated(

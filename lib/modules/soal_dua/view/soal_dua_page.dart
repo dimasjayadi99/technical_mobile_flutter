@@ -4,6 +4,8 @@ import 'package:savoria_test/modules/soal_dua/model/market_model.dart';
 import 'package:savoria_test/modules/soal_dua/view/editor_market_page.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/list_market_bloc.dart';
 import 'package:savoria_test/widget/card_market.dart';
+import 'package:savoria_test/widget/shimmer_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SoalDua extends StatefulWidget{
   const SoalDua({super.key});
@@ -55,7 +57,7 @@ class SoalDuaState extends State<SoalDua>{
                 buildWhen: (context, state) => state is ListMarketLoadingState || state is ListMarketSuccessState || state is ListMarketEmptyState,
                 builder: (context,state){
                   if(state is ListMarketLoadingState){
-                    return const Center(child: CircularProgressIndicator());
+                    return ShimmerWidget();
                   }
                   else if(state is ListMarketEmptyState){
                     return Center(child: Column(
