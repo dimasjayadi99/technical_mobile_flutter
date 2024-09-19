@@ -115,6 +115,36 @@ class EditorMarketPageState extends State<EditorMarketPage> {
     }
   }
 
+  // show image preview in dialog
+  void showImagePreview() {
+    if (images != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Image Preview'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InteractiveViewer(
+                  child: Image.file(images!),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    imagePickerFromCamera();
+                  },
+                  child: const Text("Change Photo"),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -251,7 +281,11 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                     imagePickerFromCamera();
                                   },
                                   child: const Icon(Icons.camera_alt, size: 60, color: Color(0XFF00C4D6),)),
-                            ) : Center(child: Image.file(images!, width: 100, height: 150)),
+                            ) : Center(child: GestureDetector(
+                                onTap: (){
+                                  showImagePreview();
+                                },
+                                child: Image.file(images!, width: 100, height: 150))),
 
                             const SizedBox(height: 20),
 
