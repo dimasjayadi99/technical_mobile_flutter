@@ -54,7 +54,7 @@ class SoalSatuState extends State<SoalSatu> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: isLoading
-              ? ShimmerWidget()
+              ? const ShimmerWidget()
               : listData == []
               ? const Center(child: Text('Tidak ada data'))
               :  ListView.separated(

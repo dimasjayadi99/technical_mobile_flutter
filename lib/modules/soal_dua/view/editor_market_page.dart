@@ -13,6 +13,9 @@ import 'package:savoria_test/modules/soal_dua/viewmodel/edit_market_bloc.dart';
 import 'package:savoria_test/utils/textbutton_custom.dart';
 import 'package:savoria_test/utils/textfield_custom.dart';
 import '../../../utils/snackbar_custom.dart';
+import '../../../widget/card_market.dart';
+import '../../../widget/shimmer_widget.dart';
+import '../viewmodel/list_market_bloc.dart';
 
 class EditorMarketPage extends StatefulWidget {
 
@@ -31,6 +34,9 @@ class EditorMarketPageState extends State<EditorMarketPage> {
   EditMarketBloc? editMarketBloc;
   DeleteMarketBloc? deleteMarketBloc;
   DetailMarketBloc? detailMarketBloc;
+  ListMarketBloc? listMarketBloc;
+
+  List<MarketModel> listData = [];
   MarketModel? marketModel;
 
   // Text editing controller
@@ -49,6 +55,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
   String createdAt = "";
   File? images;
   String fileName = "";
+  String? currentMarketKode;
 
   @override
   void initState() {
@@ -57,7 +64,10 @@ class EditorMarketPageState extends State<EditorMarketPage> {
     editMarketBloc = EditMarketBloc();
     deleteMarketBloc = DeleteMarketBloc();
     detailMarketBloc = DetailMarketBloc();
+    listMarketBloc = ListMarketBloc();
+
     getCurrentLocation();
+    currentMarketKode = widget.marketKode;
     if (widget.marketKode != null) {
       detailMarketBloc!.getDetailMarket(widget.marketKode!);
     }
@@ -69,6 +79,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
     editMarketBloc!.close();
     deleteMarketBloc!.close();
     detailMarketBloc!.close();
+    listMarketBloc!.close();
     marketNameController.clear();
     marketAddressController.clear();
     super.dispose();
@@ -164,6 +175,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
         BlocProvider(create: (context) => editMarketBloc!),
         BlocProvider(create: (context) => deleteMarketBloc!),
         BlocProvider(create: (context) => detailMarketBloc!),
+        BlocProvider(create: (context) => listMarketBloc!..getListMarket()),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -217,6 +229,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
           ),
         ],
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
             backgroundColor: const Color(0XFFE9E9EB),
             appBar: AppBar(
                 title: const Text("New Market")
@@ -224,9 +237,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Form(
+                child: Form(
                     key: formKey,
                     child: Column(
                       children: [
@@ -240,29 +251,29 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                    
+
                               const Text("Add New Market", style: TextStyle(fontWeight: FontWeight.bold)),
-                    
+
                               const SizedBox(height: 20),
-                    
+
                               TextfieldCustom(
                                   controller: marketNameController,
                                   hintText: "Name Market",
                                   maxLine: 1,
                                   textInputAction: TextInputAction.next
                               ),
-                    
+
                               const SizedBox(height: 10),
-                    
+
                               TextfieldCustom(
                                   controller: marketAddressController,
                                   hintText: "Market Address",
                                   maxLine: 4,
                                   textInputAction: TextInputAction.newline
                               ),
-                    
+
                               const SizedBox(height: 20),
-                    
+
                               // jika path null (default) tampilkan icon camera
                               // ambil gambar baru
                               images == null ?
@@ -282,18 +293,18 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                     showImagePreview();
                                   },
                                   child: Image.file(images!, width: 100, height: 150))),
-                    
+
                               const SizedBox(height: 20),
-                    
+
                               // jika marketkode tidak sama dengan null maka edit data
-                              if (widget.marketKode != null) ...[
+                              if (currentMarketKode != null) ...[
                                 Row(
                                   children: [
                                     Expanded(
                                       child: TextbuttonCustom(color: 0xffD6AF00, text: "Update", onPress: (){
                                         if(formKey.currentState!.validate()) {
                                           editMarketBloc!.add(EditMarketEvent(
-                                            marketKode: widget.marketKode!,
+                                            marketKode: currentMarketKode!,
                                             marketName: marketNameController.text,
                                             marketAddress: marketAddressController.text,
                                             latitudeLongitude: "$latitude, $longitude",
@@ -305,9 +316,9 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                         }
                                       }),
                                     ),
-                    
+
                                     const SizedBox(width: 10),
-                    
+
                                     Expanded(
                                       child: TextbuttonCustom(color: 0xffD60004, text: "Delete", onPress: (){
                                         showDialog(
@@ -326,7 +337,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                                 ),
                                                 TextButton(
                                                   onPressed: () {
-                                                    deleteMarketBloc!.add(DeleteMarketEvent(marketKode: widget.marketKode!));
+                                                    deleteMarketBloc!.add(DeleteMarketEvent(marketKode: currentMarketKode!));
                                                     Navigator.of(context).pop();
                                                   },
                                                   child: const Text('Ya'),
@@ -349,8 +360,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                     }else {
                                       addMarketBloc!.add(AddMarketEvent(
                                           marketName: marketNameController.text,
-                                          marketAddress: marketAddressController
-                                              .text,
+                                          marketAddress: marketAddressController.text,
                                           latitudeLongitude: "$latitude, $longitude",
                                           photo: fileName,
                                           photoPath: images?.path ?? "",
@@ -363,7 +373,77 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                               ]
                             ],
                           ),
-                        )
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(20))
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("List Market", style: TextStyle(fontWeight: FontWeight.bold)),
+                          
+                                const SizedBox(height: 20),
+                          
+                                BlocBuilder<ListMarketBloc, ListMarketInitState>(
+                                  buildWhen: (context, state) => state is ListMarketLoadingState || state is ListMarketSuccessState || state is ListMarketEmptyState,
+                                  builder: (context,state){
+                                    if(state is ListMarketLoadingState){
+                                      return const Expanded(child: ShimmerWidget());
+                                    }
+                                    else if(state is ListMarketEmptyState){
+                                      return Center(child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.info_rounded, color: Colors.black.withOpacity(0.5),),
+                                          const SizedBox(height: 5),
+                                          const Text("Tidak ada data"),
+                                        ],
+                                      ));
+                                    }else if(state is ListMarketSuccessState){
+                                      listData = state.listData;
+                                      return Expanded(
+                                        child: ListView.separated(
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  marketNameController.text = listData[index].marketName;
+                                                  marketAddressController.text = listData[index].marketAddress;
+                                                  fileName = listData[index].photo;
+                                                  if (listData[index].photoPath.isNotEmpty) {
+                                                    images = File(listData[index].photoPath);
+                                                  }
+                                                  createdAt = listData[index].createdDate;
+                                                  currentMarketKode = listData[index].marketKode;
+                                                });
+                                              },
+                                              child: CardMarket(marketModel: listData[index]),
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) => const SizedBox(height: 10),
+                                          itemCount: listData.length,
+                                        ),
+                                      );
+                                    }else{
+                                      return Container();
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                       ],
                     ),
                   ),
@@ -371,7 +451,6 @@ class EditorMarketPageState extends State<EditorMarketPage> {
               ),
             )
         ),
-      ),
     );
   }
 }
