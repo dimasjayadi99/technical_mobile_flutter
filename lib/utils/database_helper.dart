@@ -77,6 +77,7 @@ class DatabaseHelper {
     });
   }
 
+  // get detail data market
   Future<MarketModel?> getDetailMarket(String marketKode) async {
     Database db = await databaseMarket;
     final result = await db.query(

@@ -55,7 +55,7 @@ class SoalSatuState extends State<SoalSatu> {
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
               : listData == []
-              ? const Center(child: Text('No data available'))
+              ? const Center(child: Text('Tidak ada data'))
               :  ListView.separated(
             shrinkWrap: true,
             itemBuilder: (context, index) {

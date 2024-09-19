@@ -52,12 +52,13 @@ class SoalDuaState extends State<SoalDua>{
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: BlocBuilder<ListMarketBloc, ListMarketInitState>(
+                buildWhen: (context, state) => state is ListMarketLoadingState || state is ListMarketSuccessState || state is ListMarketEmptyState,
                 builder: (context,state){
                   if(state is ListMarketLoadingState){
                     return const Center(child: CircularProgressIndicator());
                   }
                   else if(state is ListMarketEmptyState){
-                    return const Center(child: Text("Data not available"));
+                    return const Center(child: Text("Tidak ada data"));
                   }else if(state is ListMarketSuccessState){
                     listData = state.listData;
                     return ListView.separated(

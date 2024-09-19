@@ -255,6 +255,8 @@ class EditorMarketPageState extends State<EditorMarketPage> {
 
                             const SizedBox(height: 20),
 
+                            // jika path null (default) tampilkan icon camera
+                            // ambil gambar baru
                             images == null ?
                             SizedBox(
                               width: double.infinity,
@@ -264,7 +266,10 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                     imagePickerFromCamera();
                                   },
                                   child: const Icon(Icons.camera_alt, size: 60, color: Color(0XFF00C4D6),)),
-                            ) : Center(child: GestureDetector(
+                            )
+                                :
+                            // jika path tidak null tampilkan preview image
+                            Center(child: GestureDetector(
                                 onTap: (){
                                   showImagePreview();
                                 },
@@ -272,6 +277,7 @@ class EditorMarketPageState extends State<EditorMarketPage> {
 
                             const SizedBox(height: 20),
 
+                            // jika marketkode tidak sama dengan null maka edit data
                             if (widget.marketKode != null) ...[
                               Row(
                                 children: [
@@ -322,7 +328,9 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                                   )
                                 ],
                               )
-                            ] else ...[
+                            ]
+                            // jika marketkode sama dengan null maka tamba data baru
+                            else ...[
                               TextbuttonCustom(color: 0xff00C4D6, text: "Save Market", onPress: (){
                                 addMarketBloc!.add(AddMarketEvent(
                                     marketName: marketNameController.text,

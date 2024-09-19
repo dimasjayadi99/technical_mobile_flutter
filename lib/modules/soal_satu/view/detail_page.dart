@@ -74,7 +74,7 @@ class DetailPageState extends State<DetailPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : data == null
-          ? const Center(child: Text('No data available'))
+          ? const Center(child: Text('Data tidak ditemukan'))
           : SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
