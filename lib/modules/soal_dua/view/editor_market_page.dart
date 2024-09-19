@@ -10,6 +10,7 @@ import 'package:savoria_test/modules/soal_dua/viewmodel/add_market_bloc.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/delete_market_bloc.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/detail_market_bloc.dart';
 import 'package:savoria_test/modules/soal_dua/viewmodel/edit_market_bloc.dart';
+import 'package:savoria_test/utils/textbutton_custom.dart';
 import 'package:savoria_test/utils/textfield_custom.dart';
 import '../../../utils/snackbar_custom.dart';
 
@@ -275,99 +276,64 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: TextButton(
-                                      style: ButtonStyle(
-                                          backgroundColor: WidgetStateColor.resolveWith(
-                                                  (states) => const Color(0xffD6AF00)),
-                                          minimumSize: WidgetStateProperty.all(Size(
-                                              MediaQuery.of(context).size.width, 50))),
-                                      onPressed: () {
-                                        editMarketBloc!.add(EditMarketEvent(
-                                            marketKode: widget.marketKode!,
-                                            marketName: marketNameController.text,
-                                            marketAddress: marketAddressController.text,
-                                            latitudeLongitude: "$latitude, $longitude",
-                                            photo: fileName,
-                                            photoPath: images?.path ?? "",
-                                            createdDate: createdAt,
-                                            updatedDate: formattedDateTime)
-                                        );
-                                      },
-                                      child: const Text("Update",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
+                                    child: TextbuttonCustom(color: 0xffD6AF00, text: "Update", onPress: (){
+                                      editMarketBloc!.add(EditMarketEvent(
+                                          marketKode: widget.marketKode!,
+                                          marketName: marketNameController.text,
+                                          marketAddress: marketAddressController.text,
+                                          latitudeLongitude: "$latitude, $longitude",
+                                          photo: fileName,
+                                          photoPath: images?.path ?? "",
+                                          createdDate: createdAt,
+                                          updatedDate: formattedDateTime)
+                                      );
+                                    }),
                                   ),
+
                                   const SizedBox(width: 10),
+
                                   Expanded(
-                                    child: TextButton(
-                                      style: ButtonStyle(
-                                        backgroundColor: WidgetStateProperty.all(const Color(0xffD60004)),
-                                        minimumSize: WidgetStateProperty.all(
-                                          Size(MediaQuery.of(context).size.width, 50),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text('Konfirmasi Hapus Data'),
-                                              content: const Text('Apakah Anda yakin ingin menghapus data ini?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('Tidak'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    deleteMarketBloc!.add(DeleteMarketEvent(marketKode: widget.marketKode!));
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('Ya'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: const Text(
-                                        "Delete",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                    child: TextbuttonCustom(color: 0xffD60004, text: "Delete", onPress: (){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('Konfirmasi Hapus Data'),
+                                            content: const Text('Apakah Anda yakin ingin menghapus data ini?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('Tidak'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  deleteMarketBloc!.add(DeleteMarketEvent(marketKode: widget.marketKode!));
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('Ya'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }),
+                                  )
                                 ],
                               )
                             ] else ...[
-                              TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: WidgetStateColor.resolveWith(
-                                            (states) => const Color(0xff00C4D6)),
-                                    minimumSize: WidgetStateProperty.all(Size(
-                                        MediaQuery.of(context).size.width, 50))),
-                                onPressed: () {
-                                  addMarketBloc!.add(AddMarketEvent(
-                                      marketName: marketNameController.text,
-                                      marketAddress: marketAddressController.text,
-                                      latitudeLongitude: "$latitude, $longitude",
-                                      photo: fileName,
-                                      photoPath: images?.path ?? "",
-                                      createdDate: formattedDateTime,
-                                      updatedDate: "")
-                                  );
-                                },
-                                child: const Text("Save Market",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ),
+                              TextbuttonCustom(color: 0xff00C4D6, text: "Save Market", onPress: (){
+                                addMarketBloc!.add(AddMarketEvent(
+                                    marketName: marketNameController.text,
+                                    marketAddress: marketAddressController.text,
+                                    latitudeLongitude: "$latitude, $longitude",
+                                    photo: fileName,
+                                    photoPath: images?.path ?? "",
+                                    createdDate: formattedDateTime,
+                                    updatedDate: "")
+                                );
+                              })
                             ]
                           ],
                         ),
