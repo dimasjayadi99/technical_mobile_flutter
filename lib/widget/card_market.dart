@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:savoria_test/modules/soal_dua/model/market_model.dart';
 
@@ -20,8 +22,8 @@ class CardMarket extends StatelessWidget{
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Image.asset(
-              "assets/default.jpg",
+            child: Image.file(
+              File(marketModel.photoPath),
               width: 80,
               height: 100,
               fit: BoxFit.cover,
