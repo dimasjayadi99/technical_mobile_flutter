@@ -37,6 +37,9 @@ class EditorMarketPageState extends State<EditorMarketPage> {
   TextEditingController marketNameController = TextEditingController();
   TextEditingController marketAddressController = TextEditingController();
 
+  // form key
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   // init variable
   Position? position;
   String marketName = "";
@@ -223,134 +226,146 @@ class EditorMarketPageState extends State<EditorMarketPage> {
                 padding: const EdgeInsets.all(16),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(20))
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            const Text("Add New Market", style: TextStyle(fontWeight: FontWeight.bold)),
-
-                            const SizedBox(height: 20),
-
-                            TextfieldCustom(
-                                controller: marketNameController,
-                                hintText: "Name Market",
-                                maxLine: 1,
-                                textInputAction: TextInputAction.next
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            TextfieldCustom(
-                                controller: marketAddressController,
-                                hintText: "Market Address",
-                                maxLine: 4,
-                                textInputAction: TextInputAction.newline
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            // jika path null (default) tampilkan icon camera
-                            // ambil gambar baru
-                            images == null ?
-                            SizedBox(
-                              width: double.infinity,
-                              height: 100,
-                              child: GestureDetector(
-                                  onTap: () async {
-                                    imagePickerFromCamera();
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(20))
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                    
+                              const Text("Add New Market", style: TextStyle(fontWeight: FontWeight.bold)),
+                    
+                              const SizedBox(height: 20),
+                    
+                              TextfieldCustom(
+                                  controller: marketNameController,
+                                  hintText: "Name Market",
+                                  maxLine: 1,
+                                  textInputAction: TextInputAction.next
+                              ),
+                    
+                              const SizedBox(height: 10),
+                    
+                              TextfieldCustom(
+                                  controller: marketAddressController,
+                                  hintText: "Market Address",
+                                  maxLine: 4,
+                                  textInputAction: TextInputAction.newline
+                              ),
+                    
+                              const SizedBox(height: 20),
+                    
+                              // jika path null (default) tampilkan icon camera
+                              // ambil gambar baru
+                              images == null ?
+                              SizedBox(
+                                width: double.infinity,
+                                height: 100,
+                                child: GestureDetector(
+                                    onTap: () async {
+                                      imagePickerFromCamera();
+                                    },
+                                    child: const Icon(Icons.camera_alt, size: 60, color: Color(0XFF00C4D6),)),
+                              )
+                                  :
+                              // jika path tidak null tampilkan preview image
+                              Center(child: GestureDetector(
+                                  onTap: (){
+                                    showImagePreview();
                                   },
-                                  child: const Icon(Icons.camera_alt, size: 60, color: Color(0XFF00C4D6),)),
-                            )
-                                :
-                            // jika path tidak null tampilkan preview image
-                            Center(child: GestureDetector(
-                                onTap: (){
-                                  showImagePreview();
-                                },
-                                child: Image.file(images!, width: 100, height: 150))),
-
-                            const SizedBox(height: 20),
-
-                            // jika marketkode tidak sama dengan null maka edit data
-                            if (widget.marketKode != null) ...[
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextbuttonCustom(color: 0xffD6AF00, text: "Update", onPress: (){
-                                      editMarketBloc!.add(EditMarketEvent(
-                                          marketKode: widget.marketKode!,
+                                  child: Image.file(images!, width: 100, height: 150))),
+                    
+                              const SizedBox(height: 20),
+                    
+                              // jika marketkode tidak sama dengan null maka edit data
+                              if (widget.marketKode != null) ...[
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextbuttonCustom(color: 0xffD6AF00, text: "Update", onPress: (){
+                                        if(formKey.currentState!.validate()) {
+                                          editMarketBloc!.add(EditMarketEvent(
+                                            marketKode: widget.marketKode!,
+                                            marketName: marketNameController.text,
+                                            marketAddress: marketAddressController.text,
+                                            latitudeLongitude: "$latitude, $longitude",
+                                            photo: fileName,
+                                            photoPath: images?.path ?? "",
+                                            createdDate: createdAt,
+                                            updatedDate: formattedDateTime)
+                                          );
+                                        }
+                                      }),
+                                    ),
+                    
+                                    const SizedBox(width: 10),
+                    
+                                    Expanded(
+                                      child: TextbuttonCustom(color: 0xffD60004, text: "Delete", onPress: (){
+                                        showDialog(
+                                          useRootNavigator: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Konfirmasi Hapus Data'),
+                                              content: const Text('Apakah Anda yakin ingin menghapus data ini?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Tidak'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    deleteMarketBloc!.add(DeleteMarketEvent(marketKode: widget.marketKode!));
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Ya'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }),
+                                    )
+                                  ],
+                                )
+                              ]
+                              // jika marketkode sama dengan null maka tamba data baru
+                              else ...[
+                                TextbuttonCustom(color: 0xff00C4D6, text: "Save Market", onPress: (){
+                                  if(formKey.currentState!.validate()) {
+                                    if(images == null){
+                                      showCustomWarning(context, "Gambar harus diisi");
+                                    }else {
+                                      addMarketBloc!.add(AddMarketEvent(
                                           marketName: marketNameController.text,
-                                          marketAddress: marketAddressController.text,
+                                          marketAddress: marketAddressController
+                                              .text,
                                           latitudeLongitude: "$latitude, $longitude",
                                           photo: fileName,
                                           photoPath: images?.path ?? "",
-                                          createdDate: createdAt,
-                                          updatedDate: formattedDateTime)
+                                          createdDate: formattedDateTime,
+                                          updatedDate: "")
                                       );
-                                    }),
-                                  ),
-
-                                  const SizedBox(width: 10),
-
-                                  Expanded(
-                                    child: TextbuttonCustom(color: 0xffD60004, text: "Delete", onPress: (){
-                                      showDialog(
-                                        useRootNavigator: false,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text('Konfirmasi Hapus Data'),
-                                            content: const Text('Apakah Anda yakin ingin menghapus data ini?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('Tidak'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  deleteMarketBloc!.add(DeleteMarketEvent(marketKode: widget.marketKode!));
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('Ya'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }),
-                                  )
-                                ],
-                              )
-                            ]
-                            // jika marketkode sama dengan null maka tamba data baru
-                            else ...[
-                              TextbuttonCustom(color: 0xff00C4D6, text: "Save Market", onPress: (){
-                                addMarketBloc!.add(AddMarketEvent(
-                                    marketName: marketNameController.text,
-                                    marketAddress: marketAddressController.text,
-                                    latitudeLongitude: "$latitude, $longitude",
-                                    photo: fileName,
-                                    photoPath: images?.path ?? "",
-                                    createdDate: formattedDateTime,
-                                    updatedDate: "")
-                                );
-                              })
-                            ]
-                          ],
-                        ),
-                      )
-                    ],
+                                    }
+                                  }
+                                })
+                              ]
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

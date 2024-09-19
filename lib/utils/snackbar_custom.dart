@@ -18,3 +18,13 @@ void showCustomFailed(BuildContext context, String message) {
 
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+void showCustomWarning(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message),
+    backgroundColor: Colors.teal,
+    behavior: SnackBarBehavior.floating,
+  );
+
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

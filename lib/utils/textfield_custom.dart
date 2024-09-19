@@ -24,6 +24,12 @@ class TextfieldCustom extends StatelessWidget{
           borderRadius: BorderRadius.circular(20),
         ),
       ),
+      validator: (String? value){
+        if(value == null || value.isEmpty || value == ""){
+          return "Wajib di isi";
+        }
+        return null;
+      },
       // validator: widget.validator,
     );
   }
